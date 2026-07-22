@@ -14,6 +14,19 @@
 <meta name="twitter:title" content="SoHi Grilled Sandwiches — Uptown Oxford" />
 <meta name="twitter:image" content="https://soho-website-one.vercel.app/images/mq/fb10.webp" />
 
+<!-- preload marquee photos so tiles paint instantly -->
+<link rel="preload" as="image" href="images/mq/store.jpg" />
+<link rel="preload" as="image" href="images/mq/fb5.jpg" />
+<link rel="preload" as="image" href="images/mq/fb7.jpg" />
+<link rel="preload" as="image" href="images/mq/fb2.jpg" />
+<link rel="preload" as="image" href="images/mq/fb4.jpg" />
+<link rel="preload" as="image" href="images/mq/fb10.jpg" />
+<link rel="preload" as="image" href="images/mq/fb8.jpg" />
+<link rel="preload" as="image" href="images/mq/fb3.jpg" />
+<link rel="preload" as="image" href="images/mq/fb6.jpg" />
+<link rel="preload" as="image" href="images/mq/fb9.jpg" />
+<link rel="preload" as="image" href="images/mq/fb1.jpg" />
+
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,400..700&family=Instrument+Sans:ital,wght@0,400..700;1,400..600&family=Shantell+Sans:ital,wght@0,400..800;1,400..700&display=swap" rel="stylesheet" />
@@ -191,7 +204,7 @@
   .marquee__track{display:flex;width:max-content;gap:clamp(16px,2vw,28px);align-items:center;
     padding:26px 0;will-change:transform;transform:translate3d(0,0,0);backface-visibility:hidden;
     animation:mq 80s linear infinite}
-  @keyframes mq{from{transform:translate3d(-50%,0,0)}to{transform:translate3d(0,0,0)}} /* left → right, never pauses */
+  @keyframes mq{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}} /* full from frame 1, seamless loop */
   .mq-item{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:14px}
   .mq-item:nth-child(odd){transform:translateY(-20px)}   /* staggered */
   .mq-item:nth-child(even){transform:translateY(20px)}
