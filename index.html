@@ -195,17 +195,14 @@
   .mq-item{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:14px}
   .mq-item:nth-child(odd){transform:translateY(-20px)}   /* staggered */
   .mq-item:nth-child(even){transform:translateY(20px)}
-  .mq-tile{width:clamp(220px,26vw,330px);height:clamp(165px,19.5vw,248px);aspect-ratio:4/3;
-    flex:0 0 auto;border-radius:10px;overflow:hidden;
-    position:relative;border:3px solid var(--orange);box-shadow:0 16px 40px rgba(0,0,0,.45);background:var(--char-2)}
+  /* tiles paint via CSS background-image (no <img>) — bulletproof cross-browser: no broken-image, no stacking, no aspect-ratio quirks */
+  .mq-tile{width:clamp(220px,26vw,330px);height:clamp(165px,19.5vw,248px);flex:0 0 auto;
+    border-radius:10px;border:3px solid var(--orange);box-shadow:0 16px 40px rgba(0,0,0,.45);
+    background-color:var(--char-2);background-size:cover;background-position:center;background-repeat:no-repeat}
   .mq-cap{font-family:var(--font-hand);font-weight:700;color:var(--cream);font-size:clamp(13px,1.4vw,15px);text-align:center;letter-spacing:.01em}
-  .mq-tile img{position:absolute;inset:0;z-index:2;width:100%;height:100%;object-fit:cover;display:block}
-  .mq-tile .mq-ph{position:absolute;inset:0;z-index:1;display:flex;align-items:center;justify-content:center;
-    background:radial-gradient(120% 100% at 50% 0,rgba(228,113,43,.25),transparent 60%),var(--char-3);
-    font-family:var(--font-hand);font-weight:800;color:rgba(246,239,227,.35);font-size:13px;letter-spacing:.1em;text-align:center;padding:12px}
 
   /* MENU */
-  .menu-sec{background:linear-gradient(180deg,#150f0c,var(--char))}
+  .menu-sec{background:linear-gradient(180deg,#150f0c,var(--char));padding:clamp(90px,13vh,155px) clamp(20px,6vw,64px) clamp(110px,15vh,185px)}
   .menu-sec .wrap{max-width:940px}
   .menu-head{margin-bottom:clamp(30px,4vw,48px)}
   .menu-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(28px,3vw,44px) clamp(36px,4vw,56px);align-items:start}
@@ -518,13 +515,8 @@
     const tile=([src,label])=>{
       const item=document.createElement('div'); item.className='mq-item';
       const box=document.createElement('div'); box.className='mq-tile';
-      const img=document.createElement('img');
-      img.loading='eager'; img.decoding='async'; img.alt='SoHi — '+label;
-      let tries=0;
-      img.onerror=()=>{ if(tries++<3){ setTimeout(()=>{ img.src=src; }, 400*tries); } else { img.remove(); } };
-      img.src=src;
-      const ph=document.createElement('div'); ph.className='mq-ph'; ph.textContent=label;
-      box.appendChild(ph); box.appendChild(img);
+      box.style.backgroundImage='url("'+src+'")';
+      box.setAttribute('role','img'); box.setAttribute('aria-label','SoHi — '+label);
       const cap=document.createElement('div'); cap.className='mq-cap'; cap.textContent=label;
       item.appendChild(box); item.appendChild(cap);
       return item;
