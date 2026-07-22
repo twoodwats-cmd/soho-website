@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SoHi — Grilled Sandwiches · Uptown Oxford</title>
+<meta name="description" content="Hand-packed Angus burgers, griddle-grilled subs, and the famous Super Fries. South of High Street, Oxford, Ohio." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,400..700&family=Instrument+Sans:ital,wght@0,400..700;1,400..600&family=Shantell+Sans:ital,wght@0,400..800;1,400..700&display=swap" rel="stylesheet" />
+
+<style>
+  :root{
+    /* SoHi palette — pulled from the storefront awning + interior stripes */
+    --orange:#E4712B;
+    --orange-bright:#F4842E;
+    --lime:#9FC131;
+    --red:#C4402A;
+    --char:#1A1512;
+    --char-2:#241c17;
+    --char-3:#2f2620;
+    --cream:#F6EFE3;
+    --cream-2:#ece0cc;
+    --wood:#5E3F27;
+    --ink:#241c15;
+
+    --font-display:'Fraunces', Georgia, serif;
+    --font-body:'Instrument Sans', system-ui, sans-serif;
+    --font-hand:'Shantell Sans', cursive;
+
+    --ease: cubic-bezier(.22,1,.36,1);
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:auto}
+  body{
+    background:var(--char);
+    color:var(--cream);
+    font-family:var(--font-body);
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+    line-height:1.5;
+  }
+  ::selection{background:var(--orange);color:var(--char)}
+
+  /* grain overlay */
+  body::after{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:200;opacity:.05;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* ---------- NAV ---------- */
+  .nav{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:22px clamp(20px,5vw,64px);
+    mix-blend-mode:difference;
+  }
+  .nav__brand{
+    font-family:var(--font-hand);font-weight:800;font-size:26px;letter-spacing:-.5px;color:#fff;
+    text-decoration:none;line-height:1;
+  }
+  .nav__brand span{color:var(--orange)}
+  .nav__right{display:flex;align-items:center;gap:clamp(14px,3vw,34px)}
+  .nav__loc{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#fff;opacity:.85}
+  @media(max-width:640px){.nav__loc{display:none}}
+  .nav__cta{
+    font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#fff;
+    text-decoration:none;border:1px solid rgba(255,255,255,.55);border-radius:100px;
+    padding:9px 18px;transition:.35s var(--ease);
+  }
+  .nav__cta:hover{background:#fff;color:#000;border-color:#fff}
+
+  /* ---------- shared type ---------- */
+  .eyebrow{
+    font-size:12px;letter-spacing:.32em;text-transform:uppercase;
+    color:var(--orange);font-weight:600;
+  }
+  .hand{font-family:var(--font-hand);font-weight:700}
+  h1,h2,h3{font-family:var(--font-display);font-weight:500;line-height:.98;letter-spacing:-.02em}
+
+  .display{
+    font-family:var(--font-display);
+    font-weight:500;
+    font-size:clamp(3.4rem,13vw,12rem);
+    line-height:.88;letter-spacing:-.03em;
+  }
+
+  /* ---------- image frame + graceful placeholder ---------- */
+  .frame{position:relative;overflow:hidden;border-radius:6px;background:var(--char-2)}
+  .frame__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;z-index:2}
+  .frame__ph{
+    position:absolute;inset:0;z-index:1;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:10px;text-align:center;padding:24px;
+    background:
+      radial-gradient(120% 90% at 50% 8%, rgba(228,113,43,.28), transparent 55%),
+      radial-gradient(140% 120% at 50% 120%, rgba(159,193,49,.12), transparent 60%),
+      linear-gradient(160deg,var(--char-3),var(--char));
+  }
+  .frame__ph .plate{
+    width:min(58%,220px);aspect-ratio:1;border-radius:50%;
+    background:radial-gradient(circle at 38% 32%, rgba(255,255,255,.10), rgba(0,0,0,.35) 70%);
+    box-shadow:inset 0 0 60px rgba(0,0,0,.5), 0 30px 60px rgba(0,0,0,.4);
+    display:flex;align-items:center;justify-content:center;
+    border:1px solid rgba(228,113,43,.25);
+  }
+  .frame__ph .plate span{font-family:var(--font-hand);font-weight:800;font-size:clamp(28px,5vw,54px);color:var(--orange);opacity:.55}
+  .frame__ph .lbl{font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:rgba(246,239,227,.55)}
+  .frame__ph .note{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(246,239,227,.28)}
+
+  /* ---------- HERO = pinned explode-and-drop burger ---------- */
+  .hero{position:relative;height:100svh;overflow:hidden;z-index:5;
+    display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
+    padding-top:clamp(84px,12svh,130px);text-align:center;
+    background:radial-gradient(90% 90% at 50% 46%, var(--char-2), var(--char))}
+  .hero__glow{position:absolute;inset:0;z-index:0;pointer-events:none;
+    background:
+      radial-gradient(60% 46% at 50% 52%, rgba(228,113,43,.20), transparent 62%),
+      radial-gradient(40% 30% at 50% 70%, rgba(159,193,49,.09), transparent 70%);
+  }
+  .hero__head{position:relative;z-index:3;will-change:transform,opacity}
+  .hero__kicker{font-family:var(--font-hand);font-weight:700;color:var(--lime);font-size:clamp(14px,2.2vw,21px);margin-bottom:12px}
+  .hero__title{font-size:clamp(2.9rem,9.5vw,7.6rem)}
+  .hero__title .l1{display:block;color:var(--cream)}
+  .hero__title .l2{display:block;color:var(--orange);font-style:italic;font-weight:400}
+  .showcase__word{position:absolute;top:56%;left:50%;transform:translate(-50%,-50%);z-index:1;font-family:var(--font-display);font-weight:400;font-style:italic;color:rgba(246,239,227,.6);opacity:.08;font-size:clamp(5rem,20vw,17rem);white-space:nowrap;letter-spacing:-.04em;pointer-events:none}
+  .scene{position:relative;z-index:2;flex:1;perspective:1500px;perspective-origin:50% 40%;
+    width:min(88vw,600px);min-height:0;display:flex;align-items:center;justify-content:center;
+    margin-top:clamp(-10px,-1vh,0px)}
+  .stack{position:relative;width:100%;height:100%;transform-style:preserve-3d;transform:rotateX(var(--rx,12deg)) rotateY(var(--ry,0deg)) scale(var(--zs,1))}
+  .ing{position:absolute;left:50%;top:50%;width:var(--w);height:auto;pointer-events:none;
+    filter:drop-shadow(0 26px 20px rgba(0,0,0,.5));will-change:transform;
+    transform:translate(-50%,-50%) translate3d(var(--x,0px),var(--y,0px),0) rotateZ(var(--r,0deg)) scale(var(--s,1))}
+  .showcase__cap{position:absolute;bottom:4.5svh;left:0;right:0;z-index:3;text-align:center;
+    font-size:12px;letter-spacing:.26em;text-transform:uppercase;color:rgba(246,239,227,.5)}
+  .showcase__cap b{color:var(--orange);font-weight:600}
+  @media(max-height:700px){.hero__title{font-size:clamp(2.4rem,8vw,5rem)}}
+
+  /* ---------- BANNER (old-site texture band) ---------- */
+  .banner{position:relative;overflow:hidden;text-align:center;color:var(--cream);
+    padding:clamp(70px,11vh,130px) clamp(20px,6vw,90px)}
+  .banner::before{content:"";position:absolute;inset:0;
+    background:url("images/banner-texture.jpg") center/cover no-repeat, var(--orange)}
+  .banner::after{content:"";position:absolute;inset:0;
+    background:radial-gradient(90% 80% at 50% 50%, rgba(26,21,18,.55), rgba(26,21,18,.78))}
+  .banner__inner{position:relative;z-index:2}
+  .banner__hand{font-family:var(--font-hand);font-weight:800;color:var(--orange-bright);
+    font-size:clamp(1.6rem,4.6vw,3.4rem);line-height:1.12;text-shadow:0 2px 18px rgba(0,0,0,.45)}
+  .banner__line{margin:18px auto 0;max-width:52ch;font-size:clamp(14px,1.6vw,18px);color:rgba(246,239,227,.88)}
+  .banner__tag{margin-top:26px;font-size:11px;letter-spacing:.34em;text-transform:uppercase;color:rgba(246,239,227,.55)}
+
+  /* ---------- generic section wrap ---------- */
+  .section{position:relative;padding:clamp(90px,14vh,180px) clamp(20px,6vw,90px)}
+  .wrap{max-width:1240px;margin:0 auto}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:clamp(30px,6vw,90px);align-items:center}
+  @media(max-width:860px){.grid2{grid-template-columns:1fr;gap:36px}}
+  .reveal{opacity:0;transform:translateY(38px)}
+
+  .lead{font-family:var(--font-display);font-weight:400;font-size:clamp(2rem,5vw,4.2rem);line-height:1.02;letter-spacing:-.02em}
+  .body-copy{font-size:clamp(15px,1.5vw,18px);color:rgba(246,239,227,.72);max-width:46ch;margin-top:22px}
+  .char-dark .body-copy{color:rgba(246,239,227,.72)}
+  .num{font-family:var(--font-hand);font-weight:700;color:var(--lime);font-size:14px;letter-spacing:.1em}
+
+  .chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+  .chip{font-size:12px;letter-spacing:.06em;border:1px solid rgba(246,239,227,.18);border-radius:100px;padding:7px 15px;color:rgba(246,239,227,.8)}
+
+  /* ORIGIN — cream panel */
+  .origin{background:var(--cream);color:var(--ink)}
+  .origin .eyebrow{color:var(--red)}
+  .origin__quote{font-family:var(--font-display);font-weight:400;font-size:clamp(2.1rem,6vw,5.4rem);line-height:1;letter-spacing:-.025em;max-width:16ch}
+  .origin__quote em{font-style:italic;color:var(--orange)}
+  .origin__meta{margin-top:40px;display:flex;flex-wrap:wrap;gap:34px 60px}
+  .origin__meta b{display:block;font-family:var(--font-display);font-size:1.7rem;font-weight:500;color:var(--ink)}
+  .origin__meta small{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:rgba(36,28,21,.55)}
+
+  /* MARQUEE — real photos, orange-framed, staggered, sliding */
+  .marquee-sec{padding:clamp(70px,10vh,120px) 0;overflow:hidden;background:var(--char)}
+  .marquee-head{max-width:1240px;margin:0 auto clamp(30px,5vw,52px);padding:0 clamp(20px,6vw,90px)}
+  .marquee{position:relative;width:100%;overflow:hidden;
+    -webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);
+            mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
+  .marquee__track{display:flex;width:max-content;gap:clamp(16px,2vw,28px);align-items:center;
+    padding:26px 0;will-change:transform;transform:translate3d(0,0,0);backface-visibility:hidden;
+    animation:mq 80s linear infinite}
+  @keyframes mq{from{transform:translate3d(-50%,0,0)}to{transform:translate3d(0,0,0)}} /* left → right, never pauses */
+  .mq-item{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:14px}
+  .mq-item:nth-child(odd){transform:translateY(-20px)}   /* staggered */
+  .mq-item:nth-child(even){transform:translateY(20px)}
+  .mq-tile{width:clamp(220px,26vw,330px);aspect-ratio:4/3;border-radius:10px;overflow:hidden;
+    position:relative;border:3px solid var(--orange);box-shadow:0 16px 40px rgba(0,0,0,.45);background:var(--char-2)}
+  .mq-cap{font-family:var(--font-hand);font-weight:700;color:var(--cream);font-size:clamp(13px,1.4vw,15px);text-align:center;letter-spacing:.01em}
+  .mq-tile img{position:absolute;inset:0;z-index:2;width:100%;height:100%;object-fit:cover;display:block}
+  .mq-tile .mq-ph{position:absolute;inset:0;z-index:1;display:flex;align-items:center;justify-content:center;
+    background:radial-gradient(120% 100% at 50% 0,rgba(228,113,43,.25),transparent 60%),var(--char-3);
+    font-family:var(--font-hand);font-weight:800;color:rgba(246,239,227,.35);font-size:13px;letter-spacing:.1em;text-align:center;padding:12px}
+
+  /* MENU */
+  .menu-sec{background:linear-gradient(180deg,#150f0c,var(--char))}
+  .menu-sec .wrap{max-width:940px}
+  .menu-head{margin-bottom:clamp(30px,4vw,48px)}
+  .menu-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(28px,3vw,44px) clamp(36px,4vw,56px);align-items:start}
+  @media(max-width:760px){.menu-grid{grid-template-columns:1fr}}
+  .menu-col{break-inside:avoid}
+  .menu-cat{font-family:var(--font-display);font-weight:500;font-size:clamp(1.25rem,1.9vw,1.55rem);color:var(--orange-bright);
+    padding-bottom:9px;margin-bottom:14px;border-bottom:1px solid rgba(228,113,43,.28);display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .menu-cat .cat-price{font-family:var(--font-body);font-weight:400;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(246,239,227,.5)}
+  .menu-item{margin-bottom:11px}
+  .menu-row{display:flex;align-items:baseline;gap:8px}
+  .mi-name{font-weight:600;color:var(--cream);font-size:15px;line-height:1.2}
+  .mi-dots{flex:1;min-width:14px;border-bottom:1px dotted rgba(246,239,227,.2);transform:translateY(-4px)}
+  .mi-price{font-family:var(--font-hand);font-weight:700;color:var(--lime);font-size:13.5px;white-space:nowrap;flex:0 0 auto}
+  .mi-desc{font-size:13px;color:rgba(246,239,227,.58);margin-top:3px;line-height:1.45}
+  .mi-desc b{color:rgba(246,239,227,.8);font-weight:600}
+  .menu-note{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:rgba(246,239,227,.4);margin-top:4px}
+
+  /* VISIT */
+  .visit{background:var(--orange);color:var(--char);text-align:center;overflow:hidden}
+  .visit .display{color:var(--char)}
+  .visit__cta{display:inline-flex;align-items:center;gap:12px;margin-top:34px;background:var(--char);color:var(--cream);text-decoration:none;
+    padding:18px 38px;border-radius:100px;font-size:15px;letter-spacing:.06em;transition:.4s var(--ease)}
+  .visit__cta:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 24px 50px rgba(0,0,0,.35)}
+  .visit__info{margin-top:56px;display:flex;justify-content:center;flex-wrap:wrap;gap:26px 64px}
+  .visit__info div{text-align:center}
+  .visit__info b{display:block;font-family:var(--font-display);font-size:1.5rem;font-weight:500}
+  .visit__info small{font-size:11px;letter-spacing:.18em;text-transform:uppercase;opacity:.7}
+
+  footer{background:var(--char);color:rgba(246,239,227,.5);text-align:center;padding:40px 20px;font-size:12px;letter-spacing:.08em}
+  footer .fbrand{font-family:var(--font-hand);font-weight:800;color:var(--cream);font-size:20px;letter-spacing:0}
+  footer .fbrand span{color:var(--orange)}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="#" class="nav__brand">So<span>Hi</span></a>
+  <div class="nav__right">
+    <span class="nav__loc">17 E High St · Oxford, OH</span>
+    <a href="https://thunderdome.orderexperience.net/6a0c98e3cc7391d3ca0e11ad/menu" target="_blank" rel="noopener" class="nav__cta">Order</a>
+  </div>
+</nav>
+
+<!-- ============ HERO — pinned explode-and-drop burger ============ -->
+<header class="hero" id="showcase">
+  <div class="hero__glow"></div>
+  <div class="showcase__word" id="scWord">get SoHi</div>
+  <div class="hero__head" id="heroHead">
+    <p class="hero__kicker">South of High Street · Uptown Oxford, Ohio</p>
+    <h1 class="hero__title">
+      <span class="l1">Oxford's Favorite</span>
+      <span class="l2">Lunch Spot.</span>
+    </h1>
+  </div>
+  <div class="scene">
+    <div class="stack" id="burgerStack">
+      <img class="ing" data-ing="heel"    src="images/layer-heel.webp"    onerror="this.onerror=null;this.src='images/layer-heel.png'"    alt="toasted brioche base" />
+      <img class="ing" data-ing="patty"   src="images/layer-patty.webp"   onerror="this.onerror=null;this.src='images/layer-patty.png'"   alt="hand-packed Angus patty" />
+      <img class="ing" data-ing="cheese"  src="images/layer-cheese.webp"  onerror="this.onerror=null;this.src='images/layer-cheese.png'"  alt="melted American cheese" />
+      <img class="ing" data-ing="sauce"   src="images/layer-sauce.webp"   onerror="this.onerror=null;this.src='images/layer-sauce.png'"   alt="house sauce" />
+      <img class="ing" data-ing="lettuce" src="images/layer-lettuce.webp" onerror="this.onerror=null;this.src='images/layer-lettuce.png'" alt="shredded iceberg lettuce" />
+      <img class="ing" data-ing="tomato"  src="images/layer-tomato.webp"  onerror="this.onerror=null;this.src='images/layer-tomato.png'"  alt="ripe tomato" />
+      <img class="ing" data-ing="crown"   src="images/layer-crown.webp"   onerror="this.onerror=null;this.src='images/layer-crown.png'"   alt="glossy brioche crown" />
+    </div>
+  </div>
+  <p class="showcase__cap" id="scCap"><b>Scroll</b> — take it apart</p>
+</header>
+
+<!-- ============ BANNER — nod to the original SoHi site ============ -->
+<section class="banner">
+  <div class="banner__inner">
+    <p class="banner__hand reveal">Welcome to SoHi<br>Grilled Sandwiches.</p>
+    <p class="banner__line reveal">So sit back, relax &amp; chow down on some tasty grub.
+      We know you'll enjoy getting SoHi.</p>
+    <p class="banner__tag reveal">Est. South of High Street</p>
+  </div>
+</section>
+
+<!-- ============ ORIGIN ============ -->
+<section class="section origin">
+  <div class="wrap">
+    <p class="eyebrow reveal">The Name</p>
+    <h2 class="origin__quote reveal">Just <em>South<br>of High</em> Street.</h2>
+    <p class="body-copy reveal" style="color:rgba(36,28,21,.72);max-width:52ch">SoHi started as a corner sub shop a few steps south of High Street in Uptown Oxford — a college town that runs on late nights, big appetites, and food worth the walk. The name stuck. So did the crowd.</p>
+    <div class="origin__meta reveal">
+      <div><b>Uptown</b><small>Oxford, Ohio</small></div>
+      <div><b>4.1★</b><small>and climbing</small></div>
+      <div><b>Fresh</b><small>Never frozen</small></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MARQUEE — real photos, orange-framed, sliding ============ -->
+<section class="marquee-sec">
+  <div class="marquee-head">
+    <p class="eyebrow reveal">Straight off the flat-top</p>
+    <h2 class="lead reveal">The real thing.</h2>
+  </div>
+  <div class="marquee" aria-label="Photos of SoHi food">
+    <div class="marquee__track" id="mqTrack"><!-- tiles injected by JS --></div>
+  </div>
+</section>
+
+<!-- ============ MENU ============ -->
+<section class="menu-sec char-dark" id="menu">
+  <div class="wrap">
+    <div class="menu-head">
+      <p class="eyebrow reveal">The Menu</p>
+      <h2 class="lead reveal">Wholesome, real food —<br>refined on the flat-top.</h2>
+    </div>
+
+    <div class="menu-grid">
+      <!-- Signature Burgers -->
+      <div class="menu-col reveal">
+        <h3 class="menu-cat">SoHi Signature Burgers</h3>
+        <div class="menu-item"><div class="menu-row"><span class="mi-name">The Classic</span><span class="mi-dots"></span><span class="mi-price">$7.49 / $9.49</span></div><p class="mi-desc">American cheese, mayo, ketchup, mustard, lettuce, tomato, topped with a fried egg.</p></div>
+        <div class="menu-item"><div class="menu-row"><span class="mi-name">BBQ Bacon Cheddar</span><span class="mi-dots"></span><span class="mi-price">$7.49 / $9.49</span></div><p class="mi-desc">Grilled onions, BBQ sauce, cheddar, applewood bacon & pickles.</p></div>
+        <div class="menu-item"><div class="menu-row"><span class="mi-name">Boursin Burger</span><span class="mi-dots"></span><span class="mi-price">$6.49 / $8.49</span></div><p class="mi-desc">Grilled onions, Boursin cheese, arugula and tomato.</p></div>
+        <p class="menu-note">single / double</p>
+      </div>
+
+      <!-- Signature Subs -->
+      <div class="menu-col reveal">
+        <h3 class="menu-cat">Signature SoHi Subs <span class="cat-price">7" $8.99 · 12" $12.49</span></h3>
+        <div class="menu-item"><div class="menu-row"><span class="mi-name">Buffalo</span></div><p class="mi-desc">Chicken, grilled onions, Buffalo sauce, crumbled bleu, ranch & lettuce.</p></div>
+        <div class="menu-item"><div class="menu-row"><span class="mi-name">SoHi Philly</span></div><p class="mi-desc">Steak or chicken, grilled onions, banana peppers, provolone, mayo & lettuce.</p></div>
+        <div class="menu-item"><div class="menu-row"><span class="mi-name">San Marzano</span></div><p class="mi-desc">Chicken, grilled onions, mushrooms, banana peppers, tomato sauce, provolone, arugula & Pecorino Romano.</p></div>
+        <div class="menu-item"><div class="menu-row"><span class="mi-name">Roasted Veggie</span></div><p class="mi-desc">Roasted zucchini, garlic, bell peppers, carrots, grilled onions, mushrooms, banana peppers, Boursin, balsamic & arugula.</p></div>
+        <div class="menu-item"><div class="menu-row"><span class="mi-name">Korean Teriyaki</span></div><p class="mi-desc">Steak or chicken, grilled onions, mushrooms, Teriyaki sauce, mayo & Kim Chi slaw.</p></div>
+      </div>
+
+      <!-- Build your own + grilled subs -->
+      <div class="menu-col reveal">
+        <h3 class="menu-cat">Hand-Packed Burger <span class="cat-price">fresh Angus</span></h3>
+        <div class="menu-item"><div class="menu-row"><span class="mi-name">Single</span><span class="mi-dots"></span><span class="mi-price">$5.99 · cheese $6.79</span></div></div>
+        <div class="menu-item"><div class="menu-row"><span class="mi-name">Double</span><span class="mi-dots"></span><span class="mi-price">$7.99 · cheese $8.79</span></div></div>
+        <p class="mi-desc"><b>Cheese:</b> American, Boursin, cheddar, crumbled bleu, pepper jack, provolone.</p>
+        <p class="mi-desc"><b>Toppings:</b> grilled onions, mushrooms, banana peppers, lettuce, tomato, pickles, arugula, mayo, mustard, ketchup, ranch, 1000 Island, Sriracha mayo, malt-vinegar aioli.</p>
+        <p class="mi-desc"><b>Add:</b> fried egg $1.49 · applewood bacon $1.49 · extra cheese $0.79.</p>
+
+        <h3 class="menu-cat" style="margin-top:32px">Grilled Subs</h3>
+        <div class="menu-item"><div class="menu-row"><span class="mi-name">Steak or Chicken</span><span class="mi-dots"></span><span class="mi-price">7" $8.99 · 12" $12.49</span></div></div>
+        <div class="menu-item"><div class="menu-row"><span class="mi-name">Steak & Eggs</span><span class="mi-dots"></span><span class="mi-price">7" $9.99 · 12" $12.99</span></div></div>
+      </div>
+
+      <!-- Fries + salad + combos -->
+      <div class="menu-col reveal">
+        <h3 class="menu-cat">SoHi Fresh-Cut Fries</h3>
+        <div class="menu-item"><div class="menu-row"><span class="mi-name">Fresh-Cut Fries</span><span class="mi-dots"></span><span class="mi-price">$2.49 / $3.49</span></div><p class="mi-desc">House seasoning & Pecorino Romano.</p></div>
+        <div class="menu-item"><div class="menu-row"><span class="mi-name">SoHi Super Fries</span><span class="mi-dots"></span><span class="mi-price">$4.99</span></div><p class="mi-desc">Cheddar jack, crumbled bacon, ranch & scallions.</p></div>
+        <div class="menu-item"><div class="menu-row"><span class="mi-name">SoHi Chopped Salad</span><span class="mi-dots"></span><span class="mi-price">$9.49</span></div><p class="mi-desc">Romaine, carrots, scallions, dried cranberries, feta, almond slivers, bacon & house dressing.</p></div>
+
+        <h3 class="menu-cat" style="margin-top:32px">Make it a Combo</h3>
+        <div class="menu-item"><div class="menu-row"><span class="mi-name">Chips & a Drink</span><span class="mi-dots"></span><span class="mi-price">$3.99</span></div></div>
+        <div class="menu-item"><div class="menu-row"><span class="mi-name">SoHi Fries & a Drink</span><span class="mi-dots"></span><span class="mi-price">$4.79</span></div></div>
+        <div class="menu-item"><div class="menu-row"><span class="mi-name">Chopped Salad & a Drink</span><span class="mi-dots"></span><span class="mi-price">$6.79</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VISIT ============ -->
+<section class="section visit" id="visit">
+  <div class="wrap">
+    <p class="hand reveal" style="font-size:22px;color:var(--char)">Come hungry.</p>
+    <h2 class="display reveal">Uptown<br>Oxford.</h2>
+    <a href="https://thunderdome.orderexperience.net/6a0c98e3cc7391d3ca0e11ad/menu" target="_blank" rel="noopener" class="visit__cta reveal">Order Online <span aria-hidden="true">→</span></a>
+    <div class="visit__info reveal">
+      <div><b>17 E High St</b><small>Oxford, OH 45056</small></div>
+      <div><b>11a – 9p</b><small>Daily</small></div>
+      <div><b>513·523·2079</b><small>Call ahead</small></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="fbrand">So<span>Hi</span></div>
+  <p style="margin-top:10px">Grilled Sandwiches · South of High Street · Oxford, Ohio</p>
+</footer>
+
+<!-- GSAP + ScrollTrigger -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script>
+  gsap.registerPlugin(ScrollTrigger);
+
+  /* ---- HERO load-in ---- */
+  gsap.timeline({defaults:{ease:"power3.out"}})
+    .from(".hero__kicker",{y:20,opacity:0,duration:.7},.1)
+    .from(".hero__title .l1",{y:60,opacity:0,duration:.9},"-=.4")
+    .from(".hero__title .l2",{y:60,opacity:0,duration:.9},"-=.65")
+    .from(".scene",{y:60,opacity:0,duration:1.1},"-=.75")
+    .from(".showcase__cap",{opacity:0,duration:.8},"-=.4");
+
+  /* ---- HERO: pinned explode-and-drop burger ---- */
+  (function burgerShowcase(){
+    const LAY = {
+      crown:  {w:356, yA:-92, yE:-272, x: 0,  r:-4},
+      tomato: {w:258, yA:-44, yE:-186, x: 70, r:9},
+      lettuce:{w:330, yA:-16, yE:-106, x:-74, r:-8},
+      sauce:  {w:198, yA: 14, yE:-36,  x: 96, r:13},
+      cheese: {w:348, yA:  6, yE: 54,  x:-70, r:-9},
+      patty:  {w:332, yA: 28, yE:170,  x: 60, r:8},
+      heel:   {w:350, yA: 64, yE:262,  x: 0,  r:-6},
+    };
+    const stack=document.getElementById('burgerStack');
+    if(!stack) return;
+    const ings=[...stack.querySelectorAll('.ing')];
+    ings.forEach(el=>el.style.setProperty('--w',LAY[el.dataset.ing].w+'px'));
+    const lerp=(a,b,t)=>a+(b-a)*t;
+    const cap=document.getElementById('scCap');
+    function render(e,p){
+      ings.forEach(el=>{
+        const L=LAY[el.dataset.ing];
+        el.style.setProperty('--y', lerp(L.yA,L.yE,e).toFixed(1)+'px');
+        el.style.setProperty('--x', lerp(0,L.x,e).toFixed(1)+'px');
+        el.style.setProperty('--r', lerp(0,L.r,e).toFixed(2)+'deg');
+        el.style.setProperty('--s', lerp(1,1.045,e).toFixed(3));
+      });
+      stack.style.setProperty('--rx', lerp(12,25,e).toFixed(1)+'deg');
+      stack.style.setProperty('--ry', lerp(-16,16,p).toFixed(1)+'deg');
+    }
+    const head=document.getElementById('heroHead');
+    const word=document.getElementById('scWord');
+
+    /* Scroll sets a TARGET; a rAF loop eases the burger toward it every frame —
+       buttery inertia, and the whole move COMPLETES right at pin-release so the
+       hand-off into normal page scroll is seamless (no stick-then-slide). */
+    let target=0, smooth=0, rafOn=false;
+    const DROP_END=0.86;                              // assembly finishes here; last 14% = tiny push-in
+    function frame(){
+      smooth += (target-smooth)*0.16;                 // snappier tracking
+      if(Math.abs(target-smooth)<0.0006){ smooth=target; rafOn=false; } else requestAnimationFrame(frame);
+      const p=smooth;
+      const t=Math.min(1, p/DROP_END);
+      const drop=t*t*(3-2*t);                         // smoothstep: gentle release → gravity → soft landing
+      const push=Math.max(0,(p-DROP_END)/(1-DROP_END));// 0→1 over the final 14%
+      const e=1-drop;                                 // start STRETCHED OUT (e=1) → assembled (e=0)
+      render(e,p);
+      stack.style.setProperty('--zs',(0.82+0.18*drop+0.05*push).toFixed(3)); // ends exactly at 1.05 when p=1
+      if(head){ head.style.transform=`translateY(${(-8*push).toFixed(1)}px)`; }
+      if(word){ word.style.opacity=(0.08+e*0.12).toFixed(3); }
+      if(cap){
+        cap.style.opacity=(1-push).toFixed(2);        // fades out as we hand off to the page
+        cap.innerHTML = e>0.6 ? '<b>Scroll</b> — drop it together'
+                      : (e>0.12 ? '<b>the drop…</b>'
+                      : 'Seven honest things — <b>hand-built to order</b>');
+      }
+    }
+    function setTarget(v){
+      target=v;
+      if(document.hidden){ smooth=v; rafOn=true; frame(); return; }
+      if(!rafOn){ rafOn=true; requestAnimationFrame(frame); }
+    }
+    smooth=0; target=0; render(1,0); stack.style.setProperty('--zs','0.82');
+    ScrollTrigger.create({
+      trigger:".hero", start:"top top", end:"+=125%",   // shorter = faster
+      pin:true, scrub:0.35, anticipatePin:1,
+      onUpdate:self=>setTarget(self.progress)
+    });
+  })();
+
+  /* ---- generic reveals ---- */
+  gsap.utils.toArray(".reveal").forEach((el)=>{
+    gsap.to(el,{y:0,opacity:1,duration:1,ease:"power3.out",
+      scrollTrigger:{trigger:el,start:"top 85%"}});
+  });
+
+  /* ---- parallax on framed images ---- */
+  gsap.utils.toArray("[data-parallax] .frame__img, [data-parallax] .frame__ph").forEach((el)=>{
+    gsap.fromTo(el,{yPercent:-8},{yPercent:8,ease:"none",
+      scrollTrigger:{trigger:el.closest(".frame"),start:"top bottom",end:"bottom top",scrub:true}});
+  });
+
+  /* ---- pepper fall over the fries ---- */
+  (function pepper(){
+    const box=document.querySelector(".pepper");
+    if(!box) return;
+    for(let i=0;i<26;i++){
+      const p=document.createElement("i");
+      p.style.left=(Math.random()*100)+"%";
+      p.style.width=p.style.height=(2+Math.random()*2.5)+"px";
+      box.appendChild(p);
+      gsap.set(p,{opacity:0});
+    }
+    gsap.to(".pepper i",{
+      keyframes:[{opacity:.9,duration:.2},{y:"70vh",opacity:0,duration:()=>2+Math.random()*2,ease:"power1.in"}],
+      stagger:{each:.12,repeat:-1,from:"random"},
+      scrollTrigger:{trigger:".fries",start:"top 70%",end:"bottom top",toggleActions:"play pause resume pause"}
+    });
+  })();
+
+  /* ---- MARQUEE: real photos, duplicated for a seamless loop ---- */
+  (function marquee(){
+    const track=document.getElementById('mqTrack');
+    if(!track) return;
+    const PHOTOS=[
+      ['images/mq/store.webp','Uptown Oxford'],
+      ['images/mq/fb5.webp','Cheeseburger'],
+      ['images/mq/fb7.webp','SoHi Super Fries'],
+      ['images/mq/fb2.webp','SoHi Chopped Salad'],
+      ['images/mq/fb4.webp','Buffalo Sub'],
+      ['images/mq/fb10.webp','The Classic'],
+      ['images/mq/fb8.webp','BBQ Bacon Cheddar'],
+      ['images/mq/fb3.webp','Fresh-Baked Cookie'],
+      ['images/mq/fb6.webp','Inside SoHi'],
+      ['images/mq/fb9.webp','Chopped Salad'],
+      ['images/mq/fb1.webp','SoHi Grilled Sandwiches'],
+    ];
+    const tile=([src,label])=>{
+      const item=document.createElement('div'); item.className='mq-item';
+      const box=document.createElement('div'); box.className='mq-tile';
+      const img=document.createElement('img');
+      img.loading='eager'; img.decoding='async'; img.alt='SoHi — '+label;
+      let tries=0;
+      img.onerror=()=>{ if(tries++<3){ setTimeout(()=>{ img.src=src; }, 400*tries); } else { img.remove(); } };
+      img.src=src;
+      const ph=document.createElement('div'); ph.className='mq-ph'; ph.textContent=label;
+      box.appendChild(ph); box.appendChild(img);
+      const cap=document.createElement('div'); cap.className='mq-cap'; cap.textContent=label;
+      item.appendChild(box); item.appendChild(cap);
+      return item;
+    };
+    // two passes = seamless -50%→0 loop
+    [...PHOTOS, ...PHOTOS].forEach(p=>track.appendChild(tile(p)));
+  })();
+
+  ScrollTrigger.refresh();
+</script>
+</body>
+</html>
