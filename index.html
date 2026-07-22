@@ -225,11 +225,12 @@
   .marquee{position:relative;width:100%;overflow:hidden;
     -webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);
             mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
-  .marquee__track{display:flex;width:max-content;gap:clamp(16px,2vw,28px);align-items:center;
+  .marquee__track{display:flex;width:max-content;align-items:center;
     padding:26px 0;will-change:transform;transform:translate3d(0,0,0);backface-visibility:hidden;
     animation:mq 80s linear infinite}
-  @keyframes mq{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}} /* full from frame 1, seamless loop */
-  .mq-item{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:14px}
+  /* spacing via per-tile margin (NOT flex gap) so each half is exactly 50% → the -50% loop is seamless, no jump */
+  @keyframes mq{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}
+  .mq-item{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:14px;margin-right:clamp(16px,2vw,28px)}
   .mq-item:nth-child(odd){transform:translateY(-20px)}   /* staggered */
   .mq-item:nth-child(even){transform:translateY(20px)}
   /* tiles paint via CSS background-image (no <img>) — bulletproof cross-browser: no broken-image, no stacking, no aspect-ratio quirks */
