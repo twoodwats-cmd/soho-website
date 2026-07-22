@@ -54,7 +54,8 @@
   }
 
   *{margin:0;padding:0;box-sizing:border-box}
-  html{scroll-behavior:auto}
+  html{scroll-behavior:smooth}
+  section[id],header[id]{scroll-margin-top:74px}
   body{
     background:var(--char);
     color:var(--cream);
@@ -71,27 +72,45 @@
     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 
-  /* ---------- NAV ---------- */
+  /* ---------- NAV (sticky, solid-on-scroll, anchor tabs) ---------- */
   .nav{
     position:fixed;top:0;left:0;right:0;z-index:100;
     display:flex;align-items:center;justify-content:space-between;
-    padding:22px clamp(20px,5vw,64px);
-    mix-blend-mode:difference;
+    padding:18px clamp(20px,5vw,64px);
+    transition:background .3s var(--ease), padding .3s var(--ease), box-shadow .3s var(--ease);
   }
+  .nav--solid{background:rgba(20,15,12,.82);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+    padding:12px clamp(20px,5vw,64px);box-shadow:0 10px 30px rgba(0,0,0,.32)}
   .nav__brand{
     font-family:var(--font-hand);font-weight:800;font-size:26px;letter-spacing:-.5px;color:#fff;
-    text-decoration:none;line-height:1;
+    text-decoration:none;line-height:1;text-shadow:0 2px 12px rgba(0,0,0,.45);z-index:2;
   }
   .nav__brand span{color:var(--orange)}
-  .nav__right{display:flex;align-items:center;gap:clamp(14px,3vw,34px)}
-  .nav__loc{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#fff;opacity:.85}
-  @media(max-width:640px){.nav__loc{display:none}}
+  .nav__right{display:flex;align-items:center;gap:clamp(16px,2.4vw,30px)}
+  .nav__link{font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:#fff;text-decoration:none;
+    opacity:.92;transition:.25s;text-shadow:0 2px 12px rgba(0,0,0,.45)}
+  .nav__link:hover{opacity:1;color:var(--orange)}
   .nav__cta{
     font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#fff;
-    text-decoration:none;border:1px solid rgba(255,255,255,.55);border-radius:100px;
+    text-decoration:none;border:1px solid rgba(255,255,255,.6);border-radius:100px;
     padding:9px 18px;transition:.35s var(--ease);
   }
-  .nav__cta:hover{background:#fff;color:#000;border-color:#fff}
+  .nav__cta:hover{background:var(--orange);color:var(--char);border-color:var(--orange)}
+  .nav__burger{display:none;flex-direction:column;gap:5px;background:none;border:0;cursor:pointer;padding:6px;z-index:2}
+  .nav__burger span{display:block;width:26px;height:2px;background:#fff;border-radius:2px;transition:.3s var(--ease)}
+  .nav__burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+  .nav__burger.open span:nth-child(2){opacity:0}
+  .nav__burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+  @media(max-width:760px){
+    .nav__burger{display:flex}
+    .nav__right{position:fixed;top:0;right:0;height:100dvh;width:min(80vw,300px);
+      flex-direction:column;justify-content:center;align-items:flex-start;gap:30px;padding:48px 40px;
+      background:rgba(18,13,10,.97);backdrop-filter:blur(14px);
+      transform:translateX(100%);transition:transform .38s var(--ease);box-shadow:-20px 0 60px rgba(0,0,0,.5)}
+    .nav__right.open{transform:translateX(0)}
+    .nav__link{font-size:17px;text-shadow:none}
+    .nav__cta{font-size:14px}
+  }
 
   /* ---------- shared type ---------- */
   .eyebrow{
@@ -142,9 +161,14 @@
   }
   .hero__head{position:relative;z-index:3;will-change:transform,opacity}
   .hero__kicker{font-family:var(--font-hand);font-weight:700;color:var(--lime);font-size:clamp(14px,2.2vw,21px);margin-bottom:12px}
-  .hero__title{font-size:clamp(2.9rem,9.5vw,7.6rem)}
-  .hero__title .l1{display:block;color:var(--cream)}
-  .hero__title .l2{display:block;color:var(--orange);font-style:italic;font-weight:400}
+  .hero__welcome{font-family:var(--font-hand);font-weight:800;color:var(--orange);line-height:1.03;
+    font-size:clamp(1.85rem,5.4vw,4.2rem);letter-spacing:-.01em;text-shadow:0 4px 30px rgba(0,0,0,.4)}
+  .hero__tag{margin:12px auto 0;font-size:clamp(13px,1.5vw,16px);color:rgba(246,239,227,.72);max-width:46ch}
+  @media(max-height:730px){.hero__tag{display:none}}
+  .basket{position:absolute;left:50%;bottom:1%;z-index:1;width:min(82vw,560px);
+    transform:translateX(-50%) translateY(var(--by,8%)) scale(var(--bs,.7));
+    opacity:var(--bo,0);pointer-events:none;filter:drop-shadow(0 24px 28px rgba(0,0,0,.55))}
+  .scene .stack{z-index:2}
   .showcase__word{position:absolute;top:56%;left:50%;transform:translate(-50%,-50%);z-index:1;font-family:var(--font-display);font-weight:400;font-style:italic;color:rgba(246,239,227,.6);opacity:.08;font-size:clamp(5rem,20vw,17rem);white-space:nowrap;letter-spacing:-.04em;pointer-events:none}
   .scene{position:relative;z-index:2;flex:1;perspective:1500px;perspective-origin:50% 40%;
     width:min(88vw,600px);min-height:0;display:flex;align-items:center;justify-content:center;
@@ -233,6 +257,22 @@
   .mi-desc b{color:rgba(246,239,227,.8);font-weight:600}
   .menu-note{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:rgba(246,239,227,.4);margin-top:4px}
 
+  /* REVIEWS */
+  .reviews-sec{background:var(--char);padding:clamp(80px,12vh,140px) clamp(20px,6vw,64px);position:relative}
+  .reviews-head{text-align:center;max-width:640px;margin:0 auto clamp(34px,5vw,54px)}
+  .reviews-head .eyebrow{color:var(--lime)}
+  .reviews-sub{margin-top:14px;color:rgba(246,239,227,.7);font-size:15px}
+  .reviews-sub b{color:var(--cream)}
+  .reviews-sub a{color:var(--orange);text-decoration:none}
+  .reviews-sub a:hover{text-decoration:underline}
+  .reviews-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(16px,2vw,24px);max-width:1000px;margin:0 auto}
+  @media(max-width:720px){.reviews-grid{grid-template-columns:1fr}}
+  .review{background:var(--char-2);border:1px solid rgba(228,113,43,.18);border-radius:12px;padding:26px 28px;margin:0}
+  .review__stars{color:var(--orange);letter-spacing:3px;font-size:15px;margin-bottom:12px}
+  .review blockquote{margin:0;font-family:var(--font-display);font-weight:400;font-size:clamp(1.05rem,1.7vw,1.35rem);line-height:1.4;color:var(--cream)}
+  .review figcaption{margin-top:16px;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:rgba(246,239,227,.62);font-weight:600}
+  .review figcaption span{color:rgba(246,239,227,.4);font-weight:400}
+
   /* VISIT */
   .visit{background:var(--orange);color:var(--char);text-align:center;overflow:hidden}
   .visit .display{color:var(--char)}
@@ -243,6 +283,11 @@
   .visit__info div{text-align:center}
   .visit__info b{display:block;font-family:var(--font-display);font-size:1.5rem;font-weight:500}
   .visit__info small{font-size:11px;letter-spacing:.18em;text-transform:uppercase;opacity:.7}
+  .visit__info a{color:var(--char);text-decoration:underline;text-underline-offset:2px}
+  .visit__social{margin-top:30px;display:flex;justify-content:center;gap:22px;flex-wrap:wrap}
+  .visit__social a{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--char);text-decoration:none;
+    border-bottom:1px solid rgba(26,21,18,.45);padding-bottom:3px;transition:.25s var(--ease)}
+  .visit__social a:hover{border-color:var(--char);opacity:.7}
 
   footer{background:var(--char);color:rgba(246,239,227,.5);text-align:center;padding:40px 20px;font-size:12px;letter-spacing:.08em}
   footer .fbrand{font-family:var(--font-hand);font-weight:800;color:var(--cream);font-size:20px;letter-spacing:0}
@@ -251,26 +296,28 @@
 </head>
 <body>
 
-<nav class="nav">
-  <a href="#" class="nav__brand">So<span>Hi</span></a>
-  <div class="nav__right">
-    <span class="nav__loc">17 E High St · Oxford, OH</span>
+<nav class="nav" id="nav">
+  <a href="#top" class="nav__brand">So<span>Hi</span></a>
+  <button class="nav__burger" id="navBurger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  <div class="nav__right" id="navMenu">
+    <a href="#menu" class="nav__link">Menu</a>
+    <a href="#reviews" class="nav__link">Reviews</a>
+    <a href="#visit" class="nav__link">Visit</a>
     <a href="https://thunderdome.orderexperience.net/6a0c98e3cc7391d3ca0e11ad/menu" target="_blank" rel="noopener" class="nav__cta">Order</a>
   </div>
 </nav>
 
 <!-- ============ HERO — pinned explode-and-drop burger ============ -->
-<header class="hero" id="showcase">
+<header class="hero" id="top">
   <div class="hero__glow"></div>
   <div class="showcase__word" id="scWord">get SoHi</div>
   <div class="hero__head" id="heroHead">
     <p class="hero__kicker">South of High Street · Uptown Oxford, Ohio</p>
-    <h1 class="hero__title">
-      <span class="l1">Oxford's Favorite</span>
-      <span class="l2">Lunch Spot.</span>
-    </h1>
+    <h1 class="hero__welcome">Welcome to SoHi<br>Grilled Sandwiches.</h1>
+    <p class="hero__tag">So sit back, relax &amp; chow down on some tasty grub.</p>
   </div>
   <div class="scene">
+    <img class="basket" id="basket" src="images/basket.webp" alt="" aria-hidden="true" onerror="this.onerror=null;this.src='images/basket.png'" />
     <div class="stack" id="burgerStack">
       <img class="ing" data-ing="heel"    src="images/layer-heel.webp"    onerror="this.onerror=null;this.src='images/layer-heel.png'"    alt="toasted brioche base" />
       <img class="ing" data-ing="patty"   src="images/layer-patty.webp"   onerror="this.onerror=null;this.src='images/layer-patty.png'"   alt="hand-packed Angus patty" />
@@ -283,30 +330,6 @@
   </div>
   <p class="showcase__cap" id="scCap"><b>Scroll</b> — take it apart</p>
 </header>
-
-<!-- ============ BANNER — nod to the original SoHi site ============ -->
-<section class="banner">
-  <div class="banner__inner">
-    <p class="banner__hand reveal">Welcome to SoHi<br>Grilled Sandwiches.</p>
-    <p class="banner__line reveal">So sit back, relax &amp; chow down on some tasty grub.
-      We know you'll enjoy getting SoHi.</p>
-    <p class="banner__tag reveal">Est. South of High Street</p>
-  </div>
-</section>
-
-<!-- ============ ORIGIN ============ -->
-<section class="section origin">
-  <div class="wrap">
-    <p class="eyebrow reveal">The Name</p>
-    <h2 class="origin__quote reveal">Just <em>South<br>of High</em> Street.</h2>
-    <p class="body-copy reveal" style="color:rgba(36,28,21,.72);max-width:52ch">SoHi started as a corner sub shop a few steps south of High Street in Uptown Oxford — a college town that runs on late nights, big appetites, and food worth the walk. The name stuck. So did the crowd.</p>
-    <div class="origin__meta reveal">
-      <div><b>Uptown</b><small>Oxford, Ohio</small></div>
-      <div><b>4.1★</b><small>and climbing</small></div>
-      <div><b>Fresh</b><small>Never frozen</small></div>
-    </div>
-  </div>
-</section>
 
 <!-- ============ MARQUEE — real photos, orange-framed, sliding ============ -->
 <section class="marquee-sec">
@@ -377,6 +400,40 @@
   </div>
 </section>
 
+<!-- ============ REVIEWS ============ -->
+<section class="reviews-sec" id="reviews">
+  <div class="wrap">
+    <div class="reviews-head reveal">
+      <p class="eyebrow">What Oxford says</p>
+      <h2 class="lead">94% recommend SoHi.</h2>
+      <p class="reviews-sub">From <b>47 reviews</b> on Facebook —
+        <a href="https://www.facebook.com/SoHiSandwich/reviews" target="_blank" rel="noopener">see them all →</a></p>
+    </div>
+    <div class="reviews-grid">
+      <figure class="review reveal">
+        <div class="review__stars" aria-label="5 out of 5 stars">★★★★★</div>
+        <blockquote>Love this place and their burgers and fries… second to NONE!</blockquote>
+        <figcaption>Brandy Lenos <span>· Apr 2021</span></figcaption>
+      </figure>
+      <figure class="review reveal">
+        <div class="review__stars" aria-label="5 out of 5 stars">★★★★★</div>
+        <blockquote>Super environment and philly steak sandwich. Fries are seasoned perfectly — our whole family loved the place!</blockquote>
+        <figcaption>John Kells <span>· Jan 2017</span></figcaption>
+      </figure>
+      <figure class="review reveal">
+        <div class="review__stars" aria-label="5 out of 5 stars">★★★★★</div>
+        <blockquote>Very good burgers and fries. The staff was friendly and professional.</blockquote>
+        <figcaption>Kitty Kline <span>· Jun 2021</span></figcaption>
+      </figure>
+      <figure class="review reveal">
+        <div class="review__stars" aria-label="5 out of 5 stars">★★★★★</div>
+        <blockquote>Great food, friendly staff and a very nice atmosphere.</blockquote>
+        <figcaption>Cheryl Minnich <span>· Jul 2017</span></figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
 <!-- ============ VISIT ============ -->
 <section class="section visit" id="visit">
   <div class="wrap">
@@ -384,9 +441,14 @@
     <h2 class="display reveal">Uptown<br>Oxford.</h2>
     <a href="https://thunderdome.orderexperience.net/6a0c98e3cc7391d3ca0e11ad/menu" target="_blank" rel="noopener" class="visit__cta reveal">Order Online <span aria-hidden="true">→</span></a>
     <div class="visit__info reveal">
-      <div><b>17 E High St</b><small>Oxford, OH 45056</small></div>
-      <div><b>11a – 9p</b><small>Daily</small></div>
-      <div><b>513·523·2079</b><small>Call ahead</small></div>
+      <div><b>17 E High St</b><small>Oxford, OH 45056 · <a href="https://maps.google.com/?q=SoHi+Grilled+Sandwiches+17+E+High+St+Oxford+OH" target="_blank" rel="noopener">Map</a></small></div>
+      <div><b>11a – 9p</b><small>Open daily</small></div>
+      <div><b><a href="tel:+15135232079">513·523·2079</a></b><small>Call ahead</small></div>
+      <div><b><a href="mailto:sohi.oxford@gmail.com">Email us</a></b><small>sohi.oxford@gmail.com</small></div>
+    </div>
+    <div class="visit__social reveal">
+      <a href="https://www.facebook.com/SoHiSandwich" target="_blank" rel="noopener">Facebook</a>
+      <a href="https://www.instagram.com/sohisandwich" target="_blank" rel="noopener">Instagram</a>
     </div>
   </div>
 </section>
@@ -422,6 +484,7 @@
       heel:   {w:350, yA: 64, yE:262,  x: 0,  r:-6},
     };
     const stack=document.getElementById('burgerStack');
+    const basket=document.getElementById('basket');
     if(!stack) return;
     const ings=[...stack.querySelectorAll('.ing')];
     ings.forEach(el=>el.style.setProperty('--w',LAY[el.dataset.ing].w+'px'));
@@ -456,6 +519,11 @@
       const e=1-drop;                                 // start STRETCHED OUT (e=1) → assembled (e=0)
       render(e,p);
       stack.style.setProperty('--zs',(0.82+0.18*drop+0.05*push).toFixed(3)); // ends exactly at 1.05 when p=1
+      if(basket){ // burger lands in the basket: fades + rises into place through the back half of the drop
+        basket.style.setProperty('--bo',(drop*drop).toFixed(3));
+        basket.style.setProperty('--bs',(0.66+0.34*drop).toFixed(3));
+        basket.style.setProperty('--by',(10-10*drop).toFixed(1)+'%');
+      }
       if(head){ head.style.transform=`translateY(${(-8*push).toFixed(1)}px)`; }
       if(word){ word.style.opacity=(0.08+e*0.12).toFixed(3); }
       if(cap){
@@ -536,6 +604,18 @@
     };
     // two passes = seamless -50%→0 loop
     [...PHOTOS, ...PHOTOS].forEach(p=>track.appendChild(tile(p)));
+  })();
+
+  /* ---- NAV: solid bar on scroll + mobile hamburger ---- */
+  (function nav(){
+    const nav=document.getElementById('nav'), burger=document.getElementById('navBurger'), menu=document.getElementById('navMenu');
+    if(!nav||!burger||!menu) return;
+    const onScroll=()=>nav.classList.toggle('nav--solid', window.scrollY>40);
+    onScroll(); window.addEventListener('scroll',onScroll,{passive:true});
+    const close=()=>{ menu.classList.remove('open'); burger.classList.remove('open'); burger.setAttribute('aria-expanded','false'); };
+    burger.addEventListener('click',()=>{ const open=menu.classList.toggle('open'); burger.classList.toggle('open',open); burger.setAttribute('aria-expanded',open?'true':'false'); });
+    menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',close));
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape') close(); });
   })();
 
   ScrollTrigger.refresh();
